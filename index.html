@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+    	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Sistemas Embebidos</title>
+		<link rel="icon" href="img/its-logo.png">
+		<link rel="stylesheet" href="css/estilos.css">
+		<link rel="stylesheet" href="css/estilos2.css">
+
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="http://code.jquery.com/jquery-latest.js"></script>
+		<script src="raphael-2.1.4.min.js"></script>
+		<script src="justgage.js"></script>
+
+		<script>
+			//var accessToken = "b3d11770cc5d99ff6760ae6926483f4be900c764";
+			//var deviceID = "190025001947353236343033"
+			var accessToken = "da42e979676638e4de25f4d517f05d27de97cbe6";
+			var deviceID = "200022000947373336323230";
+			var url = "https://api.particle.io/v1/devices/" + deviceID + "/servoF";
+
+			function callback(data, status){
+				//var datos = JSON.parse(data);
+				var datos = data;
+				//alert(datos.return_value);
+				if (status == "success") {
+					if(datos.return_value == 1){
+						document.getElementById("b1").style.backgroundColor = "#04AA6D";
+						document.getElementById("b1").style.color = "white";
+						document.getElementById("Control").textContent = "Sirviendo...";
+						document.getElementById("imgcontenido").src = "img/dulces-gif.gif";
+						document.getElementById("body").style.backgroundImage = "url('https://media2.giphy.com/media/VDHFnYvlKkUf9SrLbl/giphy.gif?cid=790b7611bd7e100bfc692e9eba1ff394aee361aec521a511&rid=giphy.gif&ct=s')";
+						TMR = setTimeout ('resetChange ()', 2500); //manda llamar al método después de 2,5 seg
+					}
+					if (datos.return_value == 0) {
+						alert("No hay un recipiente para servir los dulces.");
+					} 
+					if (datos.return_value == -1) {
+						alert("No está ese parámetro.");
+					} 
+				}
+				else {
+					alert("There was a problem.");
+				}
+			}
+			
+			function resetChange(){
+				document.getElementById("b1").style.backgroundColor = "#6DD9FE";
+				document.getElementById("b1").style.color = "#252932";
+				document.getElementById("Control").textContent = "Control de dispensador.";
+				document.getElementById("imgcontenido").src = "img/embebidos-logo.png";
+				document.getElementById("body").style.backgroundImage = "url('https://img.freepik.com/vector-gratis/fondo-glaseado-donut-sabroso-diseno-plano_52683-24095.jpg?w=2000')";
+				//alert("Listo");
+			}
+
+			function switchOn(){
+				$.post(url, {params: "on", access_token: accessToken }, callback);
+			}  
+
+		</script>
+
+		<script>
+			var accessToken = "da42e979676638e4de25f4d517f05d27de97cbe6";
+			var deviceID = "200022000947373336323230";
+			var url0 = "https://api.particle.io/v1/devices/" + deviceID + "/humedad";
+			function callback0(data, status){
+				if (status == "success") {
+					temp = parseFloat(data.result);
+					temp = temp.toFixed(2);
+					g.refresh(temp);
+					setTimeout(getReading, 1000);
+				}
+				else {
+					alert("There was a problem");
+				}
+			}
+			function getReading(){
+				$.get(url0, {access_token: accessToken}, callback0);
+			}
+		</script>
+	
+		<script>
+			var accessToken = "da42e979676638e4de25f4d517f05d27de97cbe6";
+			var deviceID = "200022000947373336323230";
+			var url2 = "https://api.particle.io/v1/devices/" + deviceID + "/gradosC";
+			function callback2(data, status){
+				if (status == "success") {
+					temp = parseFloat(data.result);
+					temp = temp.toFixed(2);
+					g2.refresh(temp);
+					setTimeout(getReading2, 1000);
+				}
+				else {
+					alert("There was a problem");
+				}
+			}
+			function getReading2(){
+				$.get(url2, {access_token: accessToken}, callback2);
+			}
+			</script>
+	
+		<script>
+			var accessToken = "da42e979676638e4de25f4d517f05d27de97cbe6";
+			var deviceID = "200022000947373336323230";
+			var url3 = "https://api.particle.io/v1/devices/" + deviceID + "/gradosF";
+			function callback3(data, status){
+				if (status == "success") {
+					temp = parseFloat(data.result);
+					temp = temp.toFixed(2);
+					g3.refresh(temp);
+					setTimeout(getReading3, 1000);
+				}
+				else {
+					alert("There was a problem");
+				}
+			}
+			function getReading3(){
+				$.get(url3, {access_token: accessToken}, callback3);
+			}
+		</script>
+
+		
+	</head>	
+
+
+	<body id = "body">
+		<header class="header">
+			<div class="wrapper">
+				<div class="logo"><img src="img/embebidos-logo.png" alt="logo">  Sistemas Embebidos</div>
+				<nav>
+					<div class="logo">Instituto Tecnológico de Saltillo  <img src="img/its-logo.png" alt="logo"></div>
+				</nav>
+			</div>
+		</header>
+
+		<div class="contenido wrapper">
+			<div class="mensaje">
+				<center><h1>DISPENSADOR DE DULCES</h1></center>
+			</div>
+
+			<div class="contenidoPractica">
+				<center>
+					<div class="contenidoBoton">
+						<img id="imgcontenido" src="img/embebidos-logo.png" class="imgCont" alt="logo">
+						<h1 id="Control">Control de dispensador.</h1>
+						<input id="b1" type="button" onClick="switchOn()" class="button" value="SERVIR DULCES"/>
+						<div id="result"></div>
+					</div>
+				</center>	
+			</div>
+
+			<div class="mensaje">
+				<center><h1>Indicadores de conservación</h1></center>
+			</div>
+	
+			<center><div id="contenedor" class="contenedor">
+				<div class="wrapper2">
+					<div id="gauge" class="200x160px"></div>
+				</div>
+	
+				<div class="wrapper2">
+					<div id="gauge2" class="200x160px"></div>
+				</div>
+	
+				<div class="wrapper2">
+					<div id="gauge3" class="200x160px"></div>
+				</div>
+			</div></center>
+	
+			<script>
+				var g = new JustGage({
+					id: "gauge",
+					value: 0,
+					min: 0,
+					max: 100,
+					title: "Humedad %"
+				});
+				getReading();
+			</script>
+	
+			<script>
+				var g2 = new JustGage({
+					id: "gauge2",
+					value: 0,
+					min: 0,
+					max: 80,
+					title: "Temperatura °C"
+				});
+				getReading2();
+			</script>
+	
+			<script>
+				var g3 = new JustGage({
+					id: "gauge3",
+					value: 0,
+					min: 32,
+					max: 100,
+					title: "Temperatura °F"
+				});
+				getReading3();
+			</script> 
+			
+			<div class="wrapper">
+				<p class="autor">Autores:<br> Angel Alejandro Riojas Alvarado <br>
+					Azael Miramontes Hernandez </p>
+			</div> 
+
+		</div>
+		
+		<footer>
+			<div class="wrapper">
+				<p>Sistemas Computacionales</p>
+			</div>
+		</footer>
+		
+	</body>
+</html>
